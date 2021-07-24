@@ -1,0 +1,79 @@
+import React from "react";
+import uniqid from "uniqid";
+import { format } from "date-fns";
+import parseISO from "date-fns/parseISO";
+import differenceInCalendarYears from "date-fns/differenceInCalendarYears";
+class InputForm extends React.Component {
+  constructor() {
+    super();
+    this.state = {
+      description: "",
+      date: format(new Date(), "yyyy.MM.dd"),
+      priority: "medium",
+      id: uniqid(),
+      tags: ["medium"],
+    };
+    this.handleChange = this.handleChange.bind(this);
+  }
+
+  handleChange(e) {
+    const { name, value } = e.target;
+    if (name === "date") {
+      console.log(this.state.date, e.target.value);
+      console.log(differenceInCalendarYears(this.state.date, e.target.value));
+    } //    tags: name === "date" ? (this.state.date )
+
+    //2021-06-28"
+
+    this.setState({
+      tags: name === "priority" ? [...value] : this.state.tags,
+      [name]: value,
+
+      id: uniqid(),
+    });
+  }
+
+  render() {
+    return (
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          this.props.changeState(this.state);
+        }}
+      >
+        <input
+          onChange={this.handleChange}
+          value={this.state.description}
+          name="description"
+          type="text"
+          required
+        />
+        <input
+          required
+          onChange={this.handleChange}
+          value={this.state.date}
+          name="date"
+          type="date"
+        />
+        <select
+          onChange={this.handleChange}
+          value={this.state.priority}
+          name="priority"
+          required
+        >
+          <option value="low">Low</option>
+          <option value="medium">Medium</option>
+          <option value="high">High</option>
+        </select>
+
+        <label>
+          <input type="submit" value="submit" />
+        </label>
+        <label>
+          <input type="reset" value="reset" />
+        </label>
+      </form>
+    );
+  }
+}
+export default InputForm;
